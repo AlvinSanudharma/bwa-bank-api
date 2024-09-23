@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Wallet;
+use Illuminate\Support\Facades\Storage;
+use Melihovv\Base64ImageDecoder\Base64ImageDecoder;
 
 class AuthController extends Controller
 {
@@ -27,11 +30,40 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->exists();
-
+        
         if ($user) {
             return response()->json([
                 'message' => 'Email already taken'
             ],409);
         }
+
+        try {
+            $profilePicture = null;
+            $ktp = null;
+
+            if ($request->profile_picture) {
+              $profilePicture = $this->uploadBase64Image($request->profile_picture);
+            }
+
+            if ($request->ktp) {
+                $ktp = $this->uploadBase64Image($request->ktp);
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    private function uploadBase64Image($base64Image) 
+    {
+        $decoder = new Base64ImageDecoder($base64Image, $allowedFormats = ['jpeg', 'png', 'jpg']);
+
+        $decodedContent = $decoder->getDecodedContent();
+        $format = $decoder->getFormat();
+
+        $image = Str::random(10).'.'.$format;
+
+        Storage::disk('public')->put($image, $decodedContent);
+
+        return $image;
     }
 }
