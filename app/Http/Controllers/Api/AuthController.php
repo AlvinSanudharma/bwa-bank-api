@@ -74,10 +74,15 @@ class AuthController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'message' => 'Register Success',
-                'user' => $user,
-            ], 201);
+            $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password]);
+
+            $userResponse = getUser($request->email);
+            
+            $userResponse->token = $token;
+            $userResponse->token_expires_in = auth()->factory()->getTTL() * 60; 
+            $userResponse->token_type = 'bearer';
+
+            return response()->json($userResponse);
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -109,12 +114,16 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'Login credentials are invalid'
                 ]);
-            }
+            }   
 
-            return $token;
+            $userResponse = getUser($request->email);
+            
+            $userResponse->token = $token;
+            $userResponse->token_expires_in = auth()->factory()->getTTL() * 60; 
+            $userResponse->token_type = 'bearer';
+
+            return response()->json($userResponse);
         } catch (JWTException $th) {
-            dd($th);
-
             return response()->json([
                 'message' => $th->getMessage()
             ]);
