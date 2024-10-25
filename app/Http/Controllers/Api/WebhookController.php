@@ -31,7 +31,7 @@ class WebhookController extends Controller
                 }
             }
             else if ($transactionStatus == 'settlement'){
-                 $status = 'settlement';
+                 $status = 'success';
             }
             else if($transactionStatus == 'pending'){
                 $status = 'pending';
