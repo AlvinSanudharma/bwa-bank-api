@@ -58,7 +58,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'username' => $request->email,
+                'username' => $this->generateUsername($request->name),
                 'password' => bcrypt($request->password),
                 'profile_picture' => $profilePicture,
                 'ktp' => $ktp,
@@ -145,6 +145,21 @@ class AuthController extends Controller
         }
 
         return $result;
+    }
+
+    private function generateUsername(string $name, int $maxAttempts = 100): string
+    {
+        $baseUsername = Str::slug($name, '-');
+        $username = $baseUsername;
+
+        for ($i = 1; $i <= $maxAttempts; $i++) {
+            if (!User::where('username', $username)->exists()) {
+                return $username;
+            }
+            $username = $baseUsername . '-' . $i;
+        }
+
+        return $baseUsername . '-' . Str::random(5);
     }
 
     private function uploadBase64Image($base64Image) 
