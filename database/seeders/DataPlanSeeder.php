@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DataPlanSeeder extends Seeder
 {
@@ -13,10 +14,16 @@ class DataPlanSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+
+        DB::table('data_plans')->truncate();
+
+        Schema::enableForeignKeyConstraints();
+
         DB::table('data_plans')->insert([
             [
                 'name' => '10 GB',
-                'price' => 218000,
+                'price' => 18000,
                 'operator_card_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -44,7 +51,7 @@ class DataPlanSeeder extends Seeder
             ],
             [
                 'name' => '10 GB',
-                'price' => 218000,
+                'price' => 28000,
                 'operator_card_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now()
