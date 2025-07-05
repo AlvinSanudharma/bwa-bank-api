@@ -16,4 +16,17 @@ class TransferHistory extends Model
         'receiver_id',
         'transaction_code',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime:Y-m-d H:m:s',
+            'updated_at' => 'datetime:Y-m-d H:m:s',
+        ];
+    }
+
+    public function receiverUser()
+    {
+        return $this->belongsTo(User::class, 'receiver_id', 'id');
+    }
 }

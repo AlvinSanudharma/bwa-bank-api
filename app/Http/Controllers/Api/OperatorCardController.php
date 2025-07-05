@@ -12,7 +12,7 @@ class OperatorCardController extends Controller
     {
         $limit = $request->query('limit') ? $request->query('limit') : 10;
 
-        $operatorCards = OperatorCard::with('dataPlans')
+        $operatorCards = OperatorCard::with('dataPlans:name,price,operator_card_id')
                                 ->where('status', 'active')
                                 ->paginate($limit); 
 
