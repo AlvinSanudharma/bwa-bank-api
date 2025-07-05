@@ -26,7 +26,7 @@ class OperatorCard extends Model
     protected function thumbnail(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => url($value),
+            get: fn (?string $value) => $value ? url($value) : '',
         );
     }
 }
