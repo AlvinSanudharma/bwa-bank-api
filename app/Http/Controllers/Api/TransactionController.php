@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
@@ -26,10 +27,15 @@ class TransactionController extends Controller
 
         $transactions->getCollection()->transform(function($item) {
             $paymentMethod = $item->paymentMethod;
-            $item->paymentMethod->thumbnail = $paymentMethod->thumbnail ? url('banks/'.$paymentMethod->thumbnail) : '';
+            if (!Str::startsWith($paymentMethod->thumbnail, ['http://', 'https://'])) {
+                $item->paymentMethod->thumbnail = $paymentMethod->thumbnail ? url('banks/' . $paymentMethod->thumbnail) : '';
+            }
+
 
             $transactionType = $item->transactionType;
-            $item->transactionType->thumbnail = $transactionType->thumbnail ? url('transaction-types/'.$transactionType->thumbnail) : '';
+             if (!Str::startsWith($transactionType->thumbnail, ['http://', 'https://'])) {
+                $item->transactionType->thumbnail = $transactionType->thumbnail ? url('transaction-types/' . $transactionType->thumbnail) : '';
+            }
 
             return $item;
         });
