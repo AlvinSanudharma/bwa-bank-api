@@ -21,6 +21,7 @@ use App\Models\TransferHistory;
 // NOTE: Auth routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('is-email-exist', [UserController::class, 'isEmailExist']);
 
 Route::post('webhooks', [WebhookController::class, 'update']);
 

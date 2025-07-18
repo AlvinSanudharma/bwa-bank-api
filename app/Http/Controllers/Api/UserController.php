@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -90,5 +91,26 @@ class UserController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function isEmailExist(Request $request) {
+        $validator = Validator::make(
+            $request->only('email'),
+            [
+                'email' => 'required|email'
+            ]
+        );
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->messages()
+            ], 400);
+        }
+
+        $isExist = User::where('email', $request->email)->exists();
+
+        return response()->json([
+            'is_email_exist' => $isExist
+        ]);
     }
 }
