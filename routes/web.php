@@ -8,3 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('payment_finish', [RedirectPaymentController::class, 'finish']);
+
+Route::group(['prefix' => 'admin'], function() {
+    Route::view('/', 'dashboard');
+});
