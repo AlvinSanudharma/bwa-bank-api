@@ -12,11 +12,13 @@ Route::get('/', function () {
 Route::get('payment_finish', [RedirectPaymentController::class, 'finish']);
 
 Route::group(['prefix' => 'admin'], function() {
-    Route::view('login', 'login')->name('admin.login');
+    Route::view('login', 'login')->name('admin.auth.index');
 
-    Route::post('login', [AuthController::class, 'login'])->name('admin.login.login');
+    Route::post('login', [AuthController::class, 'login'])->name('admin.auth.login');
 
-    Route::view('/', 'dashboard')->name('admin.dashboard');
-
-    Route::get('transaction', [TransactionController::class, 'index'])->name('admin.transaction.index');
+    Route::group(['middleware' => 'auth:web'], function() {
+        Route::view('/', 'dashboard')->name('admin.dashboard');
+    
+        Route::get('transaction', [TransactionController::class, 'index'])->name('admin.transaction.index');
+    });
 });

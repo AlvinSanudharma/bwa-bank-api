@@ -14,6 +14,6 @@ class AuthController extends Controller
         if (Auth::guard('web')->attempt($credential)) {
             return redirect()->route('admin.dashboard');
         }
-            return redirect()->back()->with('error', 'Invalid Credential');
+            return redirect()->back()->with('error', 'Invalid Credential')->withInput();
     }
 }

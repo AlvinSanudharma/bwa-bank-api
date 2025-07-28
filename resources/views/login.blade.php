@@ -32,7 +32,7 @@
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
 
-                <form action="{{ route('admin.login.login') }}" method="post">
+                <form action="{{ route('admin.auth.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input name="email" type="email" class="form-control" placeholder="Email"
